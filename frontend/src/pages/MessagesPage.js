@@ -14,7 +14,7 @@ import toast from 'react-hot-toast';
 
 const MessagesPage = () => {
   const { user } = useAuth();
-  const socket = useSocket();
+  const socketContext = useSocket();
   const [loading, setLoading] = useState(true);
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
@@ -27,27 +27,33 @@ const MessagesPage = () => {
   useEffect(() => {
     fetchConversations();
     
-    // Socket event listeners
-    if (socket) {
-      socket.on('newMessage', handleNewMessage);
-      socket.on('messageRead', handleMessageRead);
-      socket.on('userOnline', handleUserOnline);
-      socket.on('userOffline', handleUserOffline);
-      socket.on('typing', handleTyping);
-      socket.on('stopTyping', handleStopTyping);
-    }
+    // Socket event listeners using the context methods (optional)
+    if (socketContext?.socket && socketContext.connected) {
+      const socket = socketContext.socket;
+      
+      try {
+        socket.on('newMessage', handleNewMessage);
+        socket.on('messageRead', handleMessageRead);
+        socket.on('userOnline', handleUserOnline);
+        socket.on('userOffline', handleUserOffline);
+        socket.on('typing', handleTyping);
+        socket.on('stopTyping', handleStopTyping);
 
-    return () => {
-      if (socket) {
-        socket.off('newMessage', handleNewMessage);
-        socket.off('messageRead', handleMessageRead);
-        socket.off('userOnline', handleUserOnline);
-        socket.off('userOffline', handleUserOffline);
-        socket.off('typing', handleTyping);
-        socket.off('stopTyping', handleStopTyping);
+        return () => {
+          socket.off('newMessage', handleNewMessage);
+          socket.off('messageRead', handleMessageRead);
+          socket.off('userOnline', handleUserOnline);
+          socket.off('userOffline', handleUserOffline);
+          socket.off('typing', handleTyping);
+          socket.off('stopTyping', handleStopTyping);
+        };
+      } catch (error) {
+        console.log('Socket event listeners setup failed - running in demo mode');
       }
-    };
-  }, [socket]);
+    } else {
+      console.log('Socket not available - messaging will work in demo mode');
+    }
+  }, [socketContext?.socket, socketContext?.connected]);
 
   useEffect(() => {
     scrollToBottom();
@@ -265,9 +271,11 @@ const MessagesPage = () => {
       // Try to send real message
       await axios.post('/messages', messageData);
       
-      // Emit socket event
-      if (socket) {
-        socket.emit('sendMessage', messageData);
+      // Emit socket event using context method
+      if (socketContext?.sendMessage) {
+        socketContext.sendMessage(messageData);
+      } else if (socketContext?.socket && socketContext.connected) {
+        socketContext.socket.emit('sendMessage', messageData);
       }
     } catch (error) {
       // Demo mode - add message locally

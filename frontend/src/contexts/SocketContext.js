@@ -15,7 +15,21 @@ const SocketContext = createContext();
 export const useSocket = () => {
   const context = useContext(SocketContext);
   if (!context) {
-    throw new Error('useSocket must be used within a SocketProvider');
+    // Return a default object instead of throwing error
+    return {
+      socket: null,
+      connected: false,
+      onlineUsers: new Set(),
+      sendMessage: () => false,
+      startTyping: () => {},
+      stopTyping: () => {},
+      joinRoom: () => {},
+      leaveRoom: () => {},
+      isUserOnline: () => false,
+      getOnlineUsersCount: () => 0,
+      emitCustomEvent: () => {},
+      onCustomEvent: () => {}
+    };
   }
   return context;
 };
@@ -28,12 +42,16 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (isAuthenticated() && user) {
-      // Initialize socket connection
-      const newSocket = io(process.env.REACT_APP_API_URL || 'http://localhost:5001', {
-        auth: {
-          token: localStorage.getItem('token')
-        }
-      });
+      try {
+        // Initialize socket connection
+        const newSocket = io(process.env.REACT_APP_API_URL || 'http://localhost:5001', {
+          auth: {
+            token: localStorage.getItem('token')
+          },
+          transports: ['websocket', 'polling'], // Fallback transports
+          timeout: 5000,
+          forceNew: true
+        });
 
       // Connection event handlers
       newSocket.on('connect', () => {
@@ -97,14 +115,26 @@ export const SocketProvider = ({ children }) => {
         handleSystemNotification(notification);
       });
 
-      setSocket(newSocket);
+        setSocket(newSocket);
 
-      // Cleanup on unmount
-      return () => {
-        newSocket.close();
+        // Cleanup on unmount
+        return () => {
+          newSocket.close();
+          setSocket(null);
+          setConnected(false);
+        };
+      } catch (error) {
+        console.error('Socket initialization error:', error);
+        setConnected(false);
+        setSocket(null);
+      }
+    } else {
+      // Clean up socket if user is not authenticated
+      if (socket) {
+        socket.close();
         setSocket(null);
         setConnected(false);
-      };
+      }
     }
   }, [user, isAuthenticated]);
 
