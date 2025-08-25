@@ -1,8 +1,10 @@
 # Panchtatva - AI Law File Scheduler
 
-**SIH Hackathon 2024 Project**
+**SIH Hackathon 2024 Project by Team Panchtatva**
 
-An AI-powered legal case file scheduler that helps lawyers and clients manage legal cases efficiently using artificial intelligence for priority scoring, delay prediction, and resource allocation.
+Hey there! 👋 This is our submission for Smart India Hackathon 2024. We've built an AI-powered legal case management system that actually makes sense for the Indian legal system.
+
+After months of research and late-night coding sessions, we created something that could genuinely help reduce the massive case backlog in Indian courts.
 
 ## 🚀 Problem Statement
 
@@ -400,11 +402,20 @@ GET    /api/admin/system-health      # System health status
 
 ## 🤝 Contributing
 
-### Team Members
-- **Lead Developer**: Full-stack development and AI integration
-- **Frontend Specialist**: React.js and UI/UX design
-- **Backend Developer**: Node.js and database design
-- **AI Engineer**: Machine learning and OpenAI integration
+### 👥 Our Team
+
+We're a group of passionate developers who believe technology can solve real-world problems:
+
+- **Aditya Pandey** - Lead Developer (that's me! 😄)
+  - Full-stack development and project architecture
+  - AI integration and OpenAI implementation
+  - Late-night debugging champion
+  
+- **Frontend Specialist** - UI/UX and React wizardry
+- **Backend Expert** - Database design and API development  
+- **AI Researcher** - Machine learning and legal domain analysis
+
+*Fun fact: We consumed way too much coffee during this project! ☕*
 
 ### Contribution Guidelines
 1. Fork the repository

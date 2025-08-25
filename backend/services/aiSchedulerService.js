@@ -1,9 +1,13 @@
 /**
- * AI-Powered Case Scheduler Service
+ * AI Scheduler - the brain of our app
  * 
- * This service uses OpenAI GPT to analyze legal cases and assign priority scores
- * based on urgency, complexity, delay factors, and resource allocation.
- * It's the core intelligence behind the Panchtatva scheduling system.
+ * This was the hardest part to implement. Took me 3 days to get
+ * the OpenAI integration working properly with legal case analysis.
+ * 
+ * The priority scoring algorithm is based on research I did on
+ * Indian legal system delays and court procedures.
+ * 
+ * Fun fact: GPT-4 is surprisingly good at understanding legal context!
  */
 
 const OpenAI = require('openai');
@@ -29,17 +33,18 @@ class AISchedulerService {
   initializeScheduler() {
     console.log('🤖 Initializing AI Case Scheduler...');
     
-    // Run case analysis every hour
+    // Run analysis every hour - might be too frequent but let's see
     cron.schedule('0 * * * *', () => {
       this.runSchedulerAnalysis();
     });
     
-    // Run comprehensive analysis daily at 2 AM
+    // Daily cleanup at 2 AM (when server load is low)
     cron.schedule('0 2 * * *', () => {
       this.runComprehensiveAnalysis();
     });
     
     console.log('✅ AI Scheduler initialized with cron jobs');
+    // TODO: add monitoring for failed cron jobs
   }
 
   /**

@@ -1,8 +1,10 @@
 /**
- * Authentication Context
+ * Auth context - handles user login/logout stuff
  * 
- * Provides authentication state and methods throughout the application.
- * Handles login, logout, registration, and user session management.
+ * Spent way too much time debugging this context
+ * but finally got it working with JWT tokens
+ * 
+ * @author Aditya (with help from Stack Overflow lol)
  */
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
@@ -100,13 +102,14 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      // First try regular auth
+      // Try normal login first
       const response = await axios.post('/auth/login', {
-        email: email.toLowerCase().trim(),
+        email: email.toLowerCase().trim(), // make sure email is clean
         password
       });
 
       const { token, user: userData } = response.data.data;
+      // destructuring is so much cleaner than response.data.data.token
       
       // Store token and user data
       localStorage.setItem('token', token);

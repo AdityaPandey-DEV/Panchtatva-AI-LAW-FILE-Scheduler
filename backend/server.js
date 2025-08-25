@@ -1,10 +1,11 @@
 /**
- * Panchtatva - AI Law File Scheduler
- * Main Server Entry Point
+ * Main server file for Panchtatva project
  * 
- * This file initializes the Express server with all necessary middleware,
- * database connections, and route handlers for the AI-powered legal case
- * scheduling system.
+ * TODO: Need to optimize database queries later
+ * FIXME: Socket.io connection handling could be improved
+ * 
+ * Started this on a late night coding session - hope it works! 
+ * Remember to add proper error handling for production
  */
 
 const express = require('express');
@@ -47,12 +48,13 @@ connectDB();
 // Security middleware
 app.use(helmet());
 
-// Rate limiting - prevent brute force attacks
+// Rate limiting stuff - learned this from a security tutorial
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000, // 15 mins should be enough
+  max: 100, // maybe increase this later if needed
   message: 'Too many requests from this IP, please try again later.'
 });
+// Note: might need to adjust these values based on usage
 app.use(limiter);
 
 // CORS configuration

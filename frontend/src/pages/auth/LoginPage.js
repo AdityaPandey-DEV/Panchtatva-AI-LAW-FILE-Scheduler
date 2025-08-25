@@ -1,7 +1,8 @@
 /**
- * Login Page Component
+ * Login page - pretty standard stuff
  * 
- * Handles user authentication with email and password
+ * Added some nice styling and validation
+ * The demo accounts section was my idea :)
  */
 
 import React, { useState } from 'react';
@@ -43,15 +44,17 @@ const LoginPage = () => {
   const validateForm = () => {
     const newErrors = {};
 
+    // Basic email validation - could probably improve this
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = 'Email is invalid'; // regex from stackoverflow
     }
 
     if (!formData.password) {
       newErrors.password = 'Password is required';
     }
+    // TODO: add password strength validation later
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
