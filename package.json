@@ -9,7 +9,11 @@
     "server": "nodemon backend/server.js",
     "client": "cd frontend && npm start",
     "build": "cd frontend && npm run build",
-    "install-all": "npm install && cd frontend && npm install"
+    "install-all": "npm install && cd frontend && npm install",
+    "deploy": "./deploy.sh",
+    "heroku-postbuild": "npm run install-all && npm run build",
+    "seed-db": "node create-demo-users.js",
+    "test-deploy": "npm run build && npm start"
   },
   "keywords": ["AI", "legal", "scheduler", "hackathon", "SIH"],
   "author": "Team Panchtatva",
